@@ -512,3 +512,80 @@ h2.center.in::after { transform: scaleX(1); }
 
 /* Sem fotos, o véu escuro não é necessário: deixa o dourado aparecer. */
 .hero:not(:has(.hero__slides img))::after { background: none; }
+
+
+/* ==========================================================
+   ATUALIZAÇÃO DE DESIGN
+   1) Cabeçalho transparente no topo   2) Cards de especialidades com título sobre a foto
+   3) Galeria em mosaico               4) Palavra em destaque nos títulos
+   ========================================================== */
+
+/* ---------- 1) Cabeçalho transparente no topo, escuro ao rolar ---------- */
+.header {
+  background: transparent; backdrop-filter: none; border-bottom: 1px solid transparent;
+  transition: box-shadow .35s, border-color .35s;
+}
+/* Camada escura sólida: aparece ao rolar (classe .scrolled vem do script.js) ou com o menu aberto. */
+.header::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: rgba(10,8,7,.96); opacity: 0; transition: opacity .35s;
+}
+/* Véu em degradê no topo: mantém logo e menu legíveis sobre fotos. */
+.header::after {
+  content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(0,0,0,.55), transparent); transition: opacity .35s;
+}
+.header.scrolled { border-bottom-color: var(--gold); }
+.header.scrolled::before, .header:has(.nav.open)::before { opacity: 1; }
+.header.scrolled::after, .header:has(.nav.open)::after { opacity: 0; }
+
+/* ---------- 4) Palavra em destaque nos títulos ---------- */
+h1 em, h2 em { font-style: italic; font-weight: 400; }
+.hero h1 em { color: var(--champ); }
+h2 em { color: var(--gold-dark); }
+#servicos h2 em, .cta h2 em { color: #fff; }
+
+/* ---------- 2) Especialidades: título sobre a foto ---------- */
+#specialties .card { position: relative; border: 0; background: #14100d; box-shadow: 0 10px 28px rgba(26,22,19,.18); }
+#specialties .card:hover { box-shadow: 0 18px 38px rgba(26,22,19,.32); }
+/* Card ainda sem foto: fundo escuro com brilho dourado, para o título continuar legível. */
+#specialties .card .ph {
+  background:
+    radial-gradient(70% 60% at 75% 18%, rgba(201,162,77,.38), transparent 65%),
+    linear-gradient(160deg, #2a1f17, #0f0b08);
+}
+#specialties .card__body {
+  position: absolute; inset: auto 0 0 0; border-top: 0; padding: 4rem 1.4rem 1.4rem;
+  background: linear-gradient(to top, rgba(10,8,7,.92) 0%, rgba(10,8,7,.6) 55%, transparent 100%);
+  pointer-events: none;
+}
+#specialties .card h3 { color: #fff; font-size: 1.5rem; text-shadow: 0 2px 12px rgba(0,0,0,.5); }
+#specialties .card h3::before {
+  content: ""; display: block; width: 36px; height: 2px; margin-bottom: .7rem;
+  background: var(--gold); transition: width .4s;
+}
+#specialties .card:hover h3::before { width: 68px; }
+
+/* ---------- 3) Galeria em mosaico ---------- */
+/* Padrão que se repete a cada 6 fotos: 1 alta, 2 grande, 3 e 4 pequenas, 5 e 6 grandes. */
+.gallery {
+  grid-template-columns: repeat(4, 1fr); grid-auto-rows: clamp(130px, 22vw, 260px);
+  grid-auto-flow: dense; gap: 1rem;
+}
+.gallery > button { position: relative; aspect-ratio: auto; }
+.gallery > :nth-child(6n+1) { grid-row: span 2; }
+.gallery > :nth-child(6n+2) { grid-column: span 2; grid-row: span 2; }
+.gallery > :nth-child(6n+5),
+.gallery > :nth-child(6n+6) { grid-column: span 2; grid-row: span 2; }
+/* Véu suave no hover. */
+.gallery > button::after {
+  content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .4s; pointer-events: none;
+  background: linear-gradient(to top, rgba(10,8,7,.4), transparent 55%);
+}
+.gallery > button:hover::after { opacity: 1; }
+
+/* Celular: 2 colunas; as fotos 1 e 2 ficam altas lado a lado. */
+@media (max-width: 700px) {
+  .gallery { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 38vw; gap: .5rem; }
+  .gallery > :nth-child(6n+2) { grid-column: span 1; grid-row: span 2; }
+}
