@@ -497,13 +497,17 @@ h2.center.in::after { transform: scaleX(1); }
   to   { transform: translate3d(4%, 3%, 0) scale(1.12); }
 }
 
-/* Logo transparente no canto inferior direito (marca d'água; fica atrás das fotos, se houver).
-   O arquivo é images/logo.png. mix-blend-mode: screen faz o fundo escuro da logo "sumir". */
+/* Logo mesclada com o fundo, no canto direito (marca d'água; fica atrás das fotos, se houver).
+   - mix-blend-mode: screen faz o fundo escuro da logo "sumir" e misturar com o dourado do fundo.
+   - mask-image desfaz as bordas em degradê, sem corte seco.
+   Ajustes: opacity (força), width (tamanho), bottom/right (posição). */
 .hero__slides::before {
-  content: ""; position: absolute; right: -3%; bottom: -5%;
-  width: min(62vw, 540px); aspect-ratio: 1;
+  content: ""; position: absolute; right: -10%; bottom: 6%;
+  width: min(85vw, 820px); aspect-ratio: 1;
   background: url("images/logo.png") center / contain no-repeat;
-  opacity: .2; mix-blend-mode: screen; pointer-events: none;
+  opacity: .28; mix-blend-mode: screen; pointer-events: none;
+  -webkit-mask-image: radial-gradient(circle at center, #000 38%, transparent 70%);
+          mask-image: radial-gradient(circle at center, #000 38%, transparent 70%);
 }
 
 /* Sem fotos, o véu escuro não é necessário: deixa o dourado aparecer. */
